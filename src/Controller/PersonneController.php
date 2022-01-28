@@ -18,10 +18,10 @@ class PersonneController extends AbstractController
         $personne->setFirstname(firstname:'Guesmia');
         $personne->setName(name:'Barkhoum');
         $personne->setAge(age:'40');
-        $personne2 = new Personne();
-        $personne2->setFirstname(firstname:'Picard');
-        $personne2->setName(name:'Tatiana');
-        $personne2->setAge(age:'27');
+        //$personne2 = new Personne();
+        //$personne2->setFirstname(firstname:'Picard');
+        //$personne2->setName(name:'Tatiana');
+        //$personne2->setAge(age:'27');
 
         // ajouter l'operation d'insertion
         $entityManager->persist($personne);
