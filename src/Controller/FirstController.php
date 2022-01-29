@@ -2,13 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Personne;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class FirstController extends AbstractController
 {
+
     #[Route('/template', name: 'template')]
     public function template(){
         return $this->render(view: 'template.html.twig');
