@@ -3,6 +3,9 @@
 {{ firstname }} {{ name }}
 {% endblock %}
 {% block body %}
+    {{ include('fragments/date-jour.html.twig') }}
             <h1> Bienvenu {{ firstname }} {{ name }}</h1>
             <p>Mon premier projet en symfony</p>
+
 {% endblock %}
+

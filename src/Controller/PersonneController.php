@@ -18,31 +18,25 @@ class PersonneController extends AbstractController
         $personnes = $repository->findAll();
         return $this->render( 'personne/index.html.twig',['personnes'=> $personnes]);
     }
-    #[Route('/alls/age/{ageMin}/{ageMax}', name: 'personne.list.age')]
-    public function PersonnesByAge(ManagerRegistry $doctrine, $ageMin, $ageMax): Response{
+    #[Route('/stats/age/{ageMin}/{ageMax}', name: 'personne.age')]
+    public function statsPersonnesByAge(ManagerRegistry $doctrine, $ageMin, $ageMax): Response{
 
         $repository = $doctrine->getRepository(Personne::class);
-        $personnes = $repository->FindPersonnesByAgeInterval($ageMin, $ageMax);
+        $stats = $repository->statsPersonnesByAgeInterval($ageMin, $ageMax);
+        return $this->render( 'personne/stats.html.twig',[
+            'stats'=> $stats[0],
+            'ageMin'=>$ageMin,
+            'ageMax'=>$ageMax,
+        ]);
+    }
+    #[Route('/alls/age/{ageMin}/{ageMax}', name: 'personne.list.age')]
+    public function personnesByAge(ManagerRegistry $doctrine, $ageMin, $ageMax): Response{
+
+        $repository = $doctrine->getRepository(Personne::class);
+        $personnes = $repository->findPersonnesByAgeInterval($ageMin, $ageMax);
         return $this->render( 'personne/index.html.twig',['personnes'=> $personnes]);
     }
-    #[Route('/alls/{page?1}/{nbre?12}', name: 'personne.list.alls')]
-    public function indexAlls(ManagerRegistry $doctrine, $page, $nbre): Response{
-        $repository = $doctrine->getRepository(Personne::class);
-        $nbPersonne = $repository->count([]); //24
 
-        $nbrePage = ceil($nbPersonne / $nbre) ;
-
-        $personnes = $repository->findBy([],[],$nbre, offset:($page -1) * $nbre);
-
-        return $this->render( 'personne/index.html.twig',[
-            'personnes'=> $personnes,
-            'isPaginated' => true,
-            'nbrePage'=> $nbrePage,
-            'page'=> $page,
-            'nbre' => $nbre
-        ]);
-
-    }
     #[Route('/{id<\d+>}', name: 'personne.detail')]
     public function detail(Personne $personne = null): Response{
         if (!$personne){
