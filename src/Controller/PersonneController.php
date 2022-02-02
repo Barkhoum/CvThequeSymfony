@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Personne;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 #[Route('personne')]
@@ -12,8 +13,16 @@ class PersonneController extends AbstractController
 {
     #[Route('/', name: 'personne.list')]
     public function index(ManagerRegistry $doctrine): Response{
+
         $repository = $doctrine->getRepository(Personne::class);
         $personnes = $repository->findAll();
+        return $this->render( 'personne/index.html.twig',['personnes'=> $personnes]);
+    }
+    #[Route('/alls/age/{ageMin}/{ageMax}', name: 'personne.list.age')]
+    public function PersonnesByAge(ManagerRegistry $doctrine, $ageMin, $ageMax): Response{
+
+        $repository = $doctrine->getRepository(Personne::class);
+        $personnes = $repository->FindPersonnesByAgeInterval($ageMin, $ageMax);
         return $this->render( 'personne/index.html.twig',['personnes'=> $personnes]);
     }
     #[Route('/alls/{page?1}/{nbre?12}', name: 'personne.list.alls')]
@@ -23,7 +32,7 @@ class PersonneController extends AbstractController
 
         $nbrePage = ceil($nbPersonne / $nbre) ;
 
-        $personnes = $repository->findBy([],[],$nbre, offset:($page -1)* $nbre);
+        $personnes = $repository->findBy([],[],$nbre, offset:($page -1) * $nbre);
 
         return $this->render( 'personne/index.html.twig',[
             'personnes'=> $personnes,
@@ -38,7 +47,7 @@ class PersonneController extends AbstractController
     public function detail(Personne $personne = null): Response{
         if (!$personne){
             $this->addFlash(type: 'error', message: "La personne n'existe pas !");
-            return $this->redirectToRoute('personne.list');
+            return $this->redirectToRoute('/');
         }
         return $this->render( 'personne/detail.html.twig',['personne'=> $personne]);
     }
@@ -51,14 +60,45 @@ class PersonneController extends AbstractController
         $personne->setName(name:'Barkhoum');
         $personne->setAge(age:'40');
 
-
-        // ajouter l'operation d'insertion
-        $entityManager->persist($personne);
-
-
         $entityManager->flush();
-        return $this->render('personne/index.html.twig', [
-            'personne' => $personne,
+        return $this->render('personne/detail.html.twig', [
+            'personne' => $personne
         ]);
+    }
+
+    #[Route('/delete/{id}', name: 'personne.delete')]
+    public function deletePersonne(Personne $personne = null, ManagerRegistry $doctrine): RedirectResponse{
+        //recuperer la personne
+        if ($personne){
+            $manager = $doctrine->getManager();
+            $manager->remove($personne); //Ajoute la fonction de suppression dans la transaction
+            $manager->flush();// Exécuter la transaction
+            $this->addFlash(type:'success', message:'La personne a été supprimé avec succès');
+        //Si la personne existe => alors on va le supprimer et retourner un flashMessage de success
+
+        }else{
+            //sinon retourner un flashMessage d'erreur
+            $this->addFlash(type:'error', message:'Personne inexistante');
+             }
+        return $this->redirectToRoute(route: 'personne.list.alls');
+        }
+
+    #[Route('/update/{id}/{name}/{firstname}/{age}', name: 'personne.update')]
+    public function updatePersonne(Personne $personne = null, ManagerRegistry $doctrine , $name, $firstname, $age){
+    //Vefifier que la personne à mettre à jour existe
+        if($personne) {
+            $personne->setName($name);
+            $personne->setFirstname($firstname);
+            $personne->setAge($age);
+            $manager = $doctrine->getManager();
+            $manager->persist($personne);
+
+            $manager->flush();
+            $this->addFlash(type:"success", message:"La personne a été mise à jour avec succès");
+        }else{
+
+            $this->addFlash(type:"danger", message:"Personne innexistante");
+        }
+        return $this->redirectToRoute(route: 'personne.list.alls');
     }
 }

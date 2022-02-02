@@ -15,11 +15,12 @@
                 <h6 class="card-subtitle mb-2 text-muted">{{ personne.firstname}} </h6>
                 <p class="card-text">Age : {{ personne.age }}</p>
                 <a href="{{ path('personne.detail', {id: personne.id}) }}" class="card-link">Détail</a>
+                <a href="{{ path('personne.delete', {id: personne.id}) }}" class="card-link">Supprimer</a>
             </div>
         </div>
         {% endfor %}
     </div>
-    {% if isPaginated %}
+    {% if isPaginated is defined and isPaginated%}
     <div class="row mx-auto" style="width: max-content">
         <nav aria-label="Page navigation exemple ">
             <ul class="pagination">
@@ -39,5 +40,4 @@
         </nav>
         {% endif %}
     </div>
-
 {% endblock %}
