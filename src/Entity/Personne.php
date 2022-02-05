@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PersonneRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
@@ -22,9 +24,13 @@ class Personne
     #[ORM\Column(type: 'smallint')]
     private $age;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $job;
+    #[ORM\OneToOne(inversedBy: 'personne', targetEntity: Profil::class, cascade: ['persist', 'remove'])]
+    private $profil;
 
+    public function __construct()
+    {
+        $this->personnes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -67,17 +73,15 @@ class Personne
         return $this;
     }
 
-    public function getJob(): ?string
+    public function getProfil(): ?Profil
     {
-        return $this->job;
+        return $this->profil;
     }
 
-    public function setJob(?string $job): self
+    public function setProfil(?Profil $profil): self
     {
-        $this->job = $job;
+        $this->profil = $profil;
 
         return $this;
     }
-
-
 }

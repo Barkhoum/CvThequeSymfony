@@ -18,7 +18,7 @@ class PersonneController extends AbstractController
         $personnes = $repository->findAll();
         return $this->render( 'personne/index.html.twig',['personnes'=> $personnes]);
     }
-    #[Route('/stats/age/{ageMin}/{ageMax}', name: 'personne.age')]
+    #[Route('/stats/age/{ageMin}/{ageMax}', name: 'personne.list.age')]
     public function statsPersonnesByAge(ManagerRegistry $doctrine, $ageMin, $ageMax): Response{
 
         $repository = $doctrine->getRepository(Personne::class);

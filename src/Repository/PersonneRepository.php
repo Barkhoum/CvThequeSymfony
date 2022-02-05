@@ -37,6 +37,7 @@ class PersonneRepository extends ServiceEntityRepository
             ->select( 'avg(p.age) as ageMoyen, count(p.id) as nombrePersonne');
             $this->addIntervalAge($qb, $ageMin, $ageMax);
             return $qb->getQuery()->getScalarResult();
+
     }
 
     /*
