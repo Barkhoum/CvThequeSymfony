@@ -11,16 +11,16 @@ class Profil
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $url;
+    private ?string $url;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $rs;
+    private ?string $rs;
 
     #[ORM\OneToOne(mappedBy: 'profil', targetEntity: Personne::class, cascade: ['persist', 'remove'])]
-    private $personne;
+    private ?Personne $personne;
 
     public function getId(): ?int
     {

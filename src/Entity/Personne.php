@@ -27,14 +27,15 @@ class Personne
     #[ORM\OneToOne(inversedBy: 'personne', targetEntity: Profil::class, cascade: ['persist', 'remove'])]
     private $profil;
 
+    #[ORM\ManyToMany(targetEntity: Hobby::class)]
+    private $hobbies;
+
+    #[ORM\ManyToOne(targetEntity: Job::class, inversedBy: 'personnes')]
+    private $Job;
+
     public function __construct()
     {
-        $this->personnes = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
+        $this->hobbies = new ArrayCollection();
     }
 
     public function getFirstname(): ?string
@@ -81,6 +82,42 @@ class Personne
     public function setProfil(?Profil $profil): self
     {
         $this->profil = $profil;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Hobby[]
+     */
+    public function getHobbies(): Collection
+    {
+        return $this->hobbies;
+    }
+
+    public function addHobby(Hobby $hobby): self
+    {
+        if (!$this->hobbies->contains($hobby)) {
+            $this->hobbies[] = $hobby;
+        }
+
+        return $this;
+    }
+
+    public function removeHobby(Hobby $hobby): self
+    {
+        $this->hobbies->removeElement($hobby);
+
+        return $this;
+    }
+
+    public function getJob(): ?Job
+    {
+        return $this->Job;
+    }
+
+    public function setJob(?Job $Job): self
+    {
+        $this->Job = $Job;
 
         return $this;
     }
