@@ -5,8 +5,7 @@ namespace App\Entity;
 use App\Repository\PersonneRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: PersonneRepository::class)
-    @ORM\HasLifecycleCallbacks::]
+#[ORM\Entity(repositoryClass: PersonneRepository::class)]
 class Personne
 {
     #[ORM\Id]
@@ -23,8 +22,6 @@ class Personne
     #[ORM\Column(type: 'smallint')]
     private $age;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $job;
 
 
     public function getId(): ?int
@@ -68,17 +65,7 @@ class Personne
         return $this;
     }
 
-    public function getJob(): ?string
-    {
-        return $this->job;
-    }
 
-    public function setJob(?string $job): self
-    {
-        $this->job = $job;
-
-        return $this;
-    }
 
 
 }
