@@ -5,7 +5,8 @@ namespace App\Entity;
 use App\Repository\PersonneRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: PersonneRepository::class)]
+#[ORM\Entity(repositoryClass: PersonneRepository::class)
+    @ORM\HasLifecycleCallbacks::]
 class Personne
 {
     #[ORM\Id]
