@@ -19,6 +19,9 @@ class Profil
     #[ORM\Column(type: 'string', length: 50)]
     private $rs;
 
+    #[ORM\OneToOne(mappedBy: 'profil', targetEntity: Personne::class, cascade: ['persist', 'remove'])]
+    private $personne;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,28 @@ class Profil
     public function setRs(string $rs): self
     {
         $this->rs = $rs;
+
+        return $this;
+    }
+
+    public function getPersonne(): ?Personne
+    {
+        return $this->personne;
+    }
+
+    public function setPersonne(?Personne $personne): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($personne === null && $this->personne !== null) {
+            $this->personne->setProfil(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($personne !== null && $personne->getProfil() !== $this) {
+            $personne->setProfil($this);
+        }
+
+        $this->personne = $personne;
 
         return $this;
     }
