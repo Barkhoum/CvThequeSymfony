@@ -6,8 +6,11 @@ use App\Repository\PersonneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\PrePersist;
 
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
+#[ORM\HasLifecycleCallbacks()]
+
 class Personne
 {
     #[ORM\Id]
@@ -32,6 +35,12 @@ class Personne
 
     #[ORM\ManyToOne(targetEntity: Job::class, inversedBy: 'personnes')]
     private $job;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $createdAt;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $UpdatedAt;
 
     public function __construct()
     {
@@ -125,6 +134,45 @@ class Personne
         $this->job = $job;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->UpdatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $UpdatedAt): self
+    {
+        $this->UpdatedAt = $UpdatedAt;
+
+        return $this;
+    }
+   /**
+    * @ORM\PrePersist()
+    */
+    public function onPrePersist(){
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function onPreUpdate(){
+        $this->updatedAt = new \DateTime();
+
     }
 
 }
