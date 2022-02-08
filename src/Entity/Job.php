@@ -18,7 +18,7 @@ class Job
     #[ORM\Column(type: 'string', length: 255)]
     private $designation;
 
-    #[ORM\OneToMany(mappedBy: 'Job', targetEntity: Personne::class)]
+    #[ORM\OneToMany(mappedBy: 'job', targetEntity: Personne::class)]
     private $personnes;
 
     public function __construct()

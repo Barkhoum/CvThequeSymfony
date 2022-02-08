@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\ProfilRepository;
+use App\Repository\ProfileRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ProfilRepository::class)]
-class Profil
+#[ORM\Entity(repositoryClass: ProfileRepository::class)]
+class Profile
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,10 +16,10 @@ class Profil
     #[ORM\Column(type: 'string', length: 255)]
     private $url;
 
-    #[ORM\Column(type: 'string', length: 50)]
+    #[ORM\Column(type: 'string', length: 255)]
     private $rs;
 
-    #[ORM\OneToOne(mappedBy: 'profil', targetEntity: Personne::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'profile', targetEntity: Personne::class, cascade: ['persist', 'remove'])]
     private $personne;
 
     public function getId(): ?int
@@ -60,12 +60,12 @@ class Profil
     {
         // unset the owning side of the relation if necessary
         if ($personne === null && $this->personne !== null) {
-            $this->personne->setProfil(null);
+            $this->personne->setProfile(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($personne !== null && $personne->getProfil() !== $this) {
-            $personne->setProfil($this);
+        if ($personne !== null && $personne->getProfile() !== $this) {
+            $personne->setProfile($this);
         }
 
         $this->personne = $personne;

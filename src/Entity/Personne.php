@@ -24,21 +24,19 @@ class Personne
     #[ORM\Column(type: 'smallint')]
     private $age;
 
-    #[ORM\OneToOne(inversedBy: 'personne', targetEntity: Profil::class, cascade: ['persist', 'remove'])]
-    private $profil;
+    #[ORM\OneToOne(inversedBy: 'personne', targetEntity: Profile::class, cascade: ['persist', 'remove'])]
+    private $profile;
 
     #[ORM\ManyToMany(targetEntity: Hobby::class)]
     private $hobbies;
 
     #[ORM\ManyToOne(targetEntity: Job::class, inversedBy: 'personnes')]
-    private $Job;
+    private $job;
 
     public function __construct()
     {
         $this->hobbies = new ArrayCollection();
     }
-
-
 
     public function getId(): ?int
     {
@@ -81,14 +79,14 @@ class Personne
         return $this;
     }
 
-    public function getProfil(): ?Profil
+    public function getProfile(): ?Profile
     {
-        return $this->profil;
+        return $this->profile;
     }
 
-    public function setProfil(?Profil $profil): self
+    public function setProfile(?Profile $profile): self
     {
-        $this->profil = $profil;
+        $this->profile = $profile;
 
         return $this;
     }
@@ -119,13 +117,14 @@ class Personne
 
     public function getJob(): ?Job
     {
-        return $this->Job;
+        return $this->job;
     }
 
-    public function setJob(?Job $Job): self
+    public function setJob(?Job $job): self
     {
-        $this->Job = $Job;
+        $this->job = $job;
 
         return $this;
     }
+
 }
