@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PersonneRepository;
+use App\Traits\TimeStampTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,6 +15,7 @@ use Doctrine\ORM\Mapping\PrePersist;
 
 class Personne
 {
+    use TimeStampTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -36,13 +38,6 @@ class Personne
 
     #[ORM\ManyToOne(targetEntity: Job::class, inversedBy: 'personnes')]
     private  $job;
-
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private $createdAt;
-
-    #[ORM\Column(type: 'datetime', nullable: true)]
-
-    private \DateTime $updatedAt; //beug resolu il faut ajouter le type
 
     public function __construct()
     {
@@ -137,7 +132,6 @@ class Personne
 
         return $this;
     }
-
     public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
@@ -174,5 +168,6 @@ class Personne
         $this->updatedAt = new \DateTime();
 
     }
+
 
 }
