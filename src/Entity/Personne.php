@@ -6,39 +6,48 @@ use App\Repository\PersonneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Doctrine\ORM\Mapping\PrePersist;
 
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
+#[HasLifecycleCallbacks]
+
 class Personne
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id;
 
     #[ORM\Column(type: 'string', length: 50)]
-    private $firstname;
+    private ?string $firstname;
 
     #[ORM\Column(type: 'string', length: 50)]
-    private $name;
+    private ?string $name;
 
     #[ORM\Column(type: 'smallint')]
-    private $age;
+    private ?int $age;
 
-    #[ORM\OneToOne(inversedBy: 'personne', targetEntity: Profil::class, cascade: ['persist', 'remove'])]
-    private $profil;
+    #[ORM\OneToOne(inversedBy: 'personne', targetEntity: Profile::class, cascade: ['persist', 'remove'])]
+    private  $profile;
 
     #[ORM\ManyToMany(targetEntity: Hobby::class)]
-    private $hobbies;
+    private  $hobbies;
 
     #[ORM\ManyToOne(targetEntity: Job::class, inversedBy: 'personnes')]
-    private $Job;
+    private  $job;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $createdAt;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+
+    private \DateTime $updatedAt; //beug resolu il faut ajouter le type
 
     public function __construct()
     {
         $this->hobbies = new ArrayCollection();
     }
-
-
 
     public function getId(): ?int
     {
@@ -81,14 +90,14 @@ class Personne
         return $this;
     }
 
-    public function getProfil(): ?Profil
+    public function getProfile(): ?Profile
     {
-        return $this->profil;
+        return $this->profile;
     }
 
-    public function setProfil(?Profil $profil): self
+    public function setProfile(?Profile $profile): self
     {
-        $this->profil = $profil;
+        $this->profile = $profile;
 
         return $this;
     }
@@ -119,13 +128,51 @@ class Personne
 
     public function getJob(): ?Job
     {
-        return $this->Job;
+        return $this->job;
     }
 
-    public function setJob(?Job $Job): self
+    public function setJob(?Job $job): self
     {
-        $this->Job = $Job;
+        $this->job = $job;
 
         return $this;
     }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->UpdatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $UpdatedAt): self
+    {
+        $this->UpdatedAt = $UpdatedAt;
+
+        return $this;
+    }
+
+    #[ORM\PrePersist()]
+
+    public function onPrePersist(){
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
+    #[ORM\PreUpdate()]
+    public function onPreUpdate(){
+        $this->updatedAt = new \DateTime();
+
+    }
+
 }
