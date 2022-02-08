@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Personne;
+use App\Form\PersonneType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -50,16 +51,12 @@ class PersonneController extends AbstractController
     {
         $entityManager = $doctrine->getManager();
         $personne = new Personne();
-        $personne->setFirstname(firstname:'Guesmia');
-        $personne->setName(name:'Barkhoum');
-        $personne->setAge(age:'40');
-        $entityManager->persist($personne);
-        $entityManager->flush();
-        return $this->render('personne/detail.html.twig', [
-            'personne' => $personne
-        ]);
-    }
+        $form = $this->createForm(PersonneType::class,  $personne);
 
+        return $this->render(view: 'personne/add-personne.html.twig',
+            parameters: ['form' => $form->createView()
+            ]);
+    }
     #[Route('/delete/{id}', name: 'personne.delete')]
     public function deletePersonne(Personne $personne = null, ManagerRegistry $doctrine): RedirectResponse{
         //recuperer la personne
