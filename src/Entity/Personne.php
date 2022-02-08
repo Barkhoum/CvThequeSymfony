@@ -6,41 +6,43 @@ use App\Repository\PersonneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\PrePersist;
 
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
-#[ORM\HasLifecycleCallbacks()]
+#[HasLifecycleCallbacks]
 
 class Personne
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id;
 
     #[ORM\Column(type: 'string', length: 50)]
-    private $firstname;
+    private ?string $firstname;
 
     #[ORM\Column(type: 'string', length: 50)]
-    private $name;
+    private ?string $name;
 
     #[ORM\Column(type: 'smallint')]
-    private $age;
+    private ?int $age;
 
     #[ORM\OneToOne(inversedBy: 'personne', targetEntity: Profile::class, cascade: ['persist', 'remove'])]
-    private $profile;
+    private  $profile;
 
     #[ORM\ManyToMany(targetEntity: Hobby::class)]
-    private $hobbies;
+    private  $hobbies;
 
     #[ORM\ManyToOne(targetEntity: Job::class, inversedBy: 'personnes')]
-    private $job;
+    private  $job;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $createdAt;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    private $UpdatedAt;
+
+    private \DateTime $updatedAt; //beug resolu il faut ajouter le type
 
     public function __construct()
     {
@@ -136,12 +138,12 @@ class Personne
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(?\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -159,17 +161,15 @@ class Personne
 
         return $this;
     }
-   /**
-    * @ORM\PrePersist()
-    */
+
+    #[ORM\PrePersist()]
+
     public function onPrePersist(){
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
     }
 
-    /**
-     * @ORM\PreUpdate()
-     */
+    #[ORM\PreUpdate()]
     public function onPreUpdate(){
         $this->updatedAt = new \DateTime();
 

@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('personne')]
 class PersonneController extends AbstractController
 {
-    #[Route('/', name: 'personne.list')]
+    #[Route('/', name: 'personne.list.alls')]
     public function index(ManagerRegistry $doctrine): Response{
 
         $repository = $doctrine->getRepository(Personne::class);
@@ -53,7 +53,7 @@ class PersonneController extends AbstractController
         $personne->setFirstname(firstname:'Guesmia');
         $personne->setName(name:'Barkhoum');
         $personne->setAge(age:'40');
-
+        $entityManager->persist($personne);
         $entityManager->flush();
         return $this->render('personne/detail.html.twig', [
             'personne' => $personne
