@@ -132,42 +132,7 @@ class Personne
 
         return $this;
     }
-    public function getCreatedAt(): ?\DateTime
-    {
-        return $this->createdAt;
-    }
 
-    public function setCreatedAt(?\DateTime $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->UpdatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeInterface $UpdatedAt): self
-    {
-        $this->UpdatedAt = $UpdatedAt;
-
-        return $this;
-    }
-
-    #[ORM\PrePersist()]
-
-    public function onPrePersist(){
-        $this->createdAt = new \DateTime();
-        $this->updatedAt = new \DateTime();
-    }
-
-    #[ORM\PreUpdate()]
-    public function onPreUpdate(){
-        $this->updatedAt = new \DateTime();
-
-    }
 
 
 }
