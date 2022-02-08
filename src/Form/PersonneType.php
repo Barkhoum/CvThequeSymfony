@@ -21,7 +21,7 @@ class PersonneType extends AbstractType
             ->add('profile')
             ->add('hobbies')
             ->add('job')
-            ->add('editer', type: SubmitType::class)
+            ->add('Submit', type: SubmitType::class)
         ;
     }
 
