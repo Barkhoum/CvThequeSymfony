@@ -7,13 +7,12 @@ use App\Form\PersonneType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 #[Route('personne')]
 class PersonneController extends AbstractController
 {
-    #[Route('/alls', name: 'personne.alls')]
+    #[Route('/', name: 'personne.list.alls')]
     public function index(ManagerRegistry $doctrine): Response{
 
         $repository = $doctrine->getRepository(Personne::class);
@@ -47,39 +46,18 @@ class PersonneController extends AbstractController
         }
         return $this->render( 'personne/detail.html.twig',['personne'=> $personne]);
     }
-    #[Route('/edit/{id?0}', name: 'personne.edit')]
-    public function addPersonne(Personne $personne = null, ManagerRegistry $doctrine, Request $request): Response
+    #[Route('/add', name: 'personne.add')]
+    public function addPersonne(ManagerRegistry $doctrine): Response
     {
-        $new = false;
-        if(!$personne){
-            $new = true;
-            $personne = new Personne();
-        }
-
-        //personne est l'image de notre formulaire
+        $entityManager = $doctrine->getManager();
+        $personne = new Personne();
         $form = $this->createForm(PersonneType::class,  $personne);
         $form->remove('createdAt');
         $form->remove('updatedAt');
-        //Mon formulaire va aller traiter la requête
-        $form->handleRequest($request);
-        //Est ce que le formaulaire a été soumis
-        if($form->isSubmitted()){
-            $Manager = $doctrine->getManager();
-            $Manager->persist($personne);
-            $Manager->flush();
 
-            if($new){
-                $message = "a été ajouté avec succès";
-            }else{
-                $message = "a été mis à jour avec succès";
-            }
-            $this->addFlash('succés',$personne->getName(). $message);
-            return $this->redirectToRoute('/');
-
-        }else{
-            return $this->render('personne/add-personne.html.twig', parameters: ['form' => $form->createView()
-                ]);
-        }
+        return $this->render(view: 'personne/add-personne.html.twig',
+            parameters: ['form' => $form->createView()
+            ]);
     }
     #[Route('/delete/{id}', name: 'personne.delete')]
     public function deletePersonne(Personne $personne = null, ManagerRegistry $doctrine): RedirectResponse{
@@ -88,17 +66,17 @@ class PersonneController extends AbstractController
             $manager = $doctrine->getManager();
             $manager->remove($personne); //Ajoute la fonction de suppression dans la transaction
             $manager->flush();// Exécuter la transaction
-            $this->addFlash('success', 'La personne a été supprimé avec succès');
+            $this->addFlash(type:'success', message:'La personne a été supprimé avec succès');
         //Si la personne existe => alors on va le supprimer et retourner un flashMessage de success
 
         }else{
             //sinon retourner un flashMessage d'erreur
-            $this->addFlash('error', 'Personne inexistante');
+            $this->addFlash(type:'error', message:'Personne inexistante');
              }
-        return $this->redirectToRoute( 'personne.alls');
+        return $this->redirectToRoute(route: 'personne.list.alls');
         }
 
-    #[Route('/update/{id}/{name}/{firstname}/{age}', name:'personne.update')]
+    #[Route('/update/{id}/{name}/{firstname}/{age}', name: 'personne.update')]
     public function updatePersonne(Personne $personne = null, ManagerRegistry $doctrine , $name, $firstname, $age){
     //Vefifier que la personne à mettre à jour existe
         if($personne) {
@@ -109,11 +87,11 @@ class PersonneController extends AbstractController
             $manager->persist($personne);
 
             $manager->flush();
-            $this->addFlash("success", "La personne a été mise à jour avec succès");
+            $this->addFlash(type:"success", message:"La personne a été mise à jour avec succès");
         }else{
 
-            $this->addFlash("danger", "Personne innexistante");
+            $this->addFlash(type:"danger", message:"Personne innexistante");
         }
-        return $this->redirectToRoute( 'personne.alls');
+        return $this->redirectToRoute(route: 'personne.list.alls');
     }
 }

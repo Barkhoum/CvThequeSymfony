@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\PrePersist;
 
+/**
+ * @property $nom
+ */
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
 #[HasLifecycleCallbacks]
 
@@ -31,13 +34,15 @@ class Personne
     private ?int $age;
 
     #[ORM\OneToOne(inversedBy: 'personne', targetEntity: Profile::class, cascade: ['persist', 'remove'])]
-    private  $profile;
+    private $profile;
 
     #[ORM\ManyToMany(targetEntity: Hobby::class)]
     private  $hobbies;
 
     #[ORM\ManyToOne(targetEntity: Job::class, inversedBy: 'personnes')]
-    private  $job;
+    private $job;
+
+
 
     public function __construct()
     {
