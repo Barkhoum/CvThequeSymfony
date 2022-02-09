@@ -47,24 +47,33 @@ class PersonneController extends AbstractController
         }
         return $this->render( 'personne/detail.html.twig',['personne'=> $personne]);
     }
-    #[Route('/add', name: 'personne.add')]
-    public function addPersonne(ManagerRegistry $doctrine, Request $request): Response
+    #[Route('/edit/{id?0}', name: 'personne.edit')]
+    public function addPersonne(Personne $personne = null, ManagerRegistry $doctrine, Request $request): Response
     {
+        $new = false;
+        if(!$personne){
+            $new = true;
+            $personne = new Personne();
+        }
 
-        $personne = new Personne();
+        //personne est l'image de notre formulaire
         $form = $this->createForm(PersonneType::class,  $personne);
         $form->remove('createdAt');
         $form->remove('updatedAt');
         //Mon formulaire va aller traiter la requête
         $form->handleRequest($request);
-        //Estce que le formaulaire a été soumis
+        //Est ce que le formaulaire a été soumis
         if($form->isSubmitted()){
             $Manager = $doctrine->getManager();
             $Manager->persist($personne);
             $Manager->flush();
 
-
-            $this->addFlash($personne->getName(). "a été ajouté avec succès");
+            if($new){
+                $message = "a été ajouté avec succès";
+            }else{
+                $message = "a été mis à jour avec succès";
+            }
+            $this->addFlash('succés',$personne->getName(). $message);
             return $this->redirectToRoute('/');
 
         }else{
