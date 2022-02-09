@@ -1,8 +1,22 @@
 {% extends 'template.html.twig' %}
 
 {% block body %}
-    {{form(form)}}
+    {{form_start(form)}}
+        <div class="row">
+            <div class="col">{{form_row(form.firstname)}}</div>
+            <div class="col">{{form_row(form.name)}}</div>
+        </div>
+       <div class="row">
+            <div class="col">{{form_row(form.age)}}</div>
+            <div class="col">{{form_row(form.profile)}}</div>
+        </div>
+    <div class="row">
+        <div class="col">{{form_row(form.job)}}</div>
+        <div class="col">{{form_row(form.hobbies)}}</div>
+    </div>
+    {{form_rest(form)}}
 {% endblock %}
-{% block title %}
 
+{% block title %}
+Formulaire de contact
 {% endblock %}
