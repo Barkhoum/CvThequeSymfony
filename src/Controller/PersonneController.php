@@ -52,6 +52,8 @@ class PersonneController extends AbstractController
         $entityManager = $doctrine->getManager();
         $personne = new Personne();
         $form = $this->createForm(PersonneType::class,  $personne);
+        $form->remove('createdAt');
+        $form->remove('updatedAt');
 
         return $this->render(view: 'personne/add-personne.html.twig',
             parameters: ['form' => $form->createView()
