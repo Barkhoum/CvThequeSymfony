@@ -27,7 +27,7 @@ class TodoController extends AbstractController
                 'Correction' => 'Revoir PHP POO'
             ];
             $session ->set('todos', $todos);
-            $this->addFlash(type:'info', message:"La liste des todos viens d'être initialisée");
+            $this->addFlash(message: "La liste des todos viens d'être initialisée");
         }
         //si j'ai mon tableau de todo dans ma session je ne fait que l'afficher
         return $this->render(view:'todo/index.html.twig');
@@ -45,17 +45,17 @@ class TodoController extends AbstractController
             $todos = $session->get(name:'todos');
             if (isset($todos[$name])){
                 //si oui afficher le message d'erreur
-                $this->addFlash(type:'danger', message:"le todo avec le $name existe déja dans la liste");
+                $this->addFlash(message: "le todo avec le $name existe déja dans la liste");
             }else{
                 //Si non on l'ajoute et en affiche un message de succés
                 $todos[$name] = $content;
-                $this->addFlash(type:'success', message:"le todo d'id $name à été ajouté avec success");
+                $this->addFlash(message: "le todo d'id $name à été ajouté avec success");
                 $session->set('todos', $todos);
             }
         }else{
         //si non
         //affiche une erreur et on va rediriger vers le controlleur index
-        $this->addFlash(type:'error', message:"La liste des todos n'est pas encore initialiséé");
+        $this->addFlash(message: "La liste des todos n'est pas encore initialiséé");
         }
         return $this->redirectToRoute(route:'todo');
     }
@@ -69,18 +69,18 @@ class TodoController extends AbstractController
             $todos = $session->get(name:'todos');
             if (!isset($todos[$name])){
                 //si oui afficher le message d'erreur
-                $this->addFlash(type:'danger', message:"le todo avec le $name n'existe déja dans la liste");
+                $this->addFlash(message: "le todo avec le $name n'existe déja dans la liste");
             }else{
                 //Si non on l'ajoute et en affiche un message de succés
                 $todos[$name] = $content;
                 $session->set('todos', $todos);
-                $this->addFlash(type:'success', message:"le todo d'id $name à été modifié avec success");
+                $this->addFlash(message: "le todo d'id $name à été modifié avec success");
 
             }
         }else{
             //si non
             //affiche une erreur et on va rediriger vers le controlleur index
-            $this->addFlash(type:'error', message:"La liste des todos n'est pas encore initialiséé");
+            $this->addFlash(message: "La liste des todos n'est pas encore initialiséé");
         }
         return $this->redirectToRoute(route:'todo');
     }
@@ -94,17 +94,17 @@ class TodoController extends AbstractController
             $todos = $session->get(name:'todos');
             if (!isset($todos[$name])){
                 //si oui afficher le message d'erreur
-                $this->addFlash(type:'danger', message:"le todo avec le $name existe déja dans la liste");
+                $this->addFlash(message: "le todo avec le $name existe déja dans la liste");
             }else{
                 //Si non on l'ajoute et en affiche un message de succés
                 unset($todos[$name]);
                 $session->set('todos', $todos);
-                $this->addFlash(type:'success', message:"le todo d'id $name à été supprimé avec success");
+                $this->addFlash(message: "le todo d'id $name à été supprimé avec success");
             }
         }else{
             //si non
             //affiche une erreur et on va rediriger vers le controlleur index
-            $this->addFlash(type:'error', message:"La liste des todos n'est pas encore initialiséé");
+            $this->addFlash(message: "La liste des todos n'est pas encore initialiséé");
         }
         return $this->redirectToRoute(route:'todo');
     }
