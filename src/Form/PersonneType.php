@@ -31,17 +31,15 @@ class PersonneType extends AbstractType
                 'expanded' => true,
                 'class'=> Hobby::class,
                 'multiple'=> true,
+                'choice_label'=> 'designation',
                 'query_builder'=> function (EntityRepository $er){
                 return $er->createQueryBuilder('h')
-                    ->orderBy('h.designation','ASC')
-                },
-                'choice_label'=> 'designation'
+                    ->orderBy('h.designation','ASC'); }
             ])
             ->add('job')
-            ->add('Submit', type: SubmitType::class)
+            ->add('Submit', type: SubmitType::class);
 
     }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
