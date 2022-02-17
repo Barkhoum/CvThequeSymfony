@@ -7,12 +7,13 @@ use App\Form\PersonneType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 #[Route('personne')]
 class PersonneController extends AbstractController
 {
-    #[Route('/', name: 'personne.list.alls')]
+    #[Route('/alls', name: 'personne.alls')]
     public function index(ManagerRegistry $doctrine): Response{
 
         $repository = $doctrine->getRepository(Personne::class);
@@ -46,18 +47,39 @@ class PersonneController extends AbstractController
         }
         return $this->render( 'personne/detail.html.twig',['personne'=> $personne]);
     }
-    #[Route('/add', name: 'personne.add')]
-    public function addPersonne(ManagerRegistry $doctrine): Response
+    #[Route('/edit/{id?0}', name: 'personne.edit')]
+    public function addPersonne(personne $personne=null, ManagerRegistry $doctrine, Request $request): Response
     {
-        $entityManager = $doctrine->getManager();
-        $personne = new Personne();
+        $new = false;
+
+        if(!$personne){
+            $new =false;
+            $personne = new Personne();
+        }
+
         $form = $this->createForm(PersonneType::class,  $personne);
         $form->remove('createdAt');
         $form->remove('updatedAt');
+        $form->handleRequest($request);
 
-        return $this->render(view: 'personne/add-personne.html.twig',
-            parameters: ['form' => $form->createView()
-            ]);
+        if($form->isSubmitted()){
+           $manager = $doctrine->getManager();
+           $manager->persist($personne);
+
+           $manager->flush();
+           if($new){
+               $message = "a été ajouté avec succès";
+           }else{
+                $message = "a été mis à jour avec succès";
+           }
+            $this->addFlash("success", $personne->getName(). $message);
+           //Rediriger vers la liste des personnes
+            return $this->redirectToRoute('/');
+           }else{
+                return $this->render(view: 'personne/add-personne.html.twig',
+                    parameters: ['form' => $form->createView()
+                    ]);
+                }
     }
     #[Route('/delete/{id}', name: 'personne.delete')]
     public function deletePersonne(Personne $personne = null, ManagerRegistry $doctrine): RedirectResponse{
